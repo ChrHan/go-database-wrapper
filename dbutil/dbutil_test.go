@@ -42,5 +42,7 @@ func (dc *DbutilSuite) Test2Insert() {
   resultCount := dc.dbutil.SelectCount()
   assert.NotNil(dc.T(), result, "Result should not be Nil")
   assert.NotEqual(dc.T(), 0, resultCount, "Result should NOT be 0")
+  product_name_selected := dc.dbutil.SelectOne(id)
+  assert.Equal(dc.T(), product_name, product_name_selected, "Result should be equal to inserted value")
 }
 

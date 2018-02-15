@@ -1,7 +1,7 @@
 package dbutil
 
 import (
-	"database/sql"
+  "database/sql"
   "fmt"
   "strconv"
   "github.com/prometheus/log"
@@ -44,9 +44,9 @@ func (d *Dbutil) Select() *sql.Rows {
     fmt.Println(id, name)
   }
   err = rows.Err()
-	if err != nil {
-		log.Fatal(err)
-	}
+  if err != nil {
+    log.Fatal(err)
+  }
   db.Close();
   return rows
 }
@@ -70,14 +70,26 @@ func (d *Dbutil) SelectCount() int {
 func (d *Dbutil) Insert(id string, product_name string) {
   db, errOpen := sql.Open("sqlite3", "./" + d.Filename)
   if errOpen != nil {
-		log.Fatal(errOpen)
-	}
+    log.Fatal(errOpen)
+  }
   query_string := "insert into products (id, product_name) values ("+ id + ", '" + product_name + "')"
-	_, err := db.Exec(query_string)
-	if err != nil {
-		log.Fatal(err)
-	}
+  _, err := db.Exec(query_string)
+  if err != nil {
+    log.Fatal(err)
+  }
 }
+
+func (d *Dbutil) SelectOne(id string) string {
+  db, err := sql.Open("sqlite3", "./" + d.Filename)
+  var result string
+  err = db.QueryRow("select product_name from products where id = " + id).Scan(&result)
+  if err != nil {
+    log.Fatal(err)
+  }
+  db.Close();
+  return result
+}
+
 
 /*func main() {
   // -> config from env
@@ -129,7 +141,7 @@ func (d *Dbutil) Insert(id string, product_name string) {
 
 func connect_db(db_filename string) *sql.DB {
   db, err := sql.Open("sqlite3", "./" + db_filename)
-	if err != nil {
+  if err != nil {
     log.Fatal(err)
   }
   return db
@@ -164,38 +176,38 @@ func select_sql(db *sql.DB) *sql.Rows {
     fmt.Println(id, name)
   }
   err = rows.Err()
-	if err != nil {
-		log.Fatal(err)
-	}
+  if err != nil {
+    log.Fatal(err)
+  }
   return rows
 }
 
 func insert_sql(db *sql.DB, id string, product_name string) {
   query_string := "insert into products (id, product_name) values ("+ id + ", '" + product_name + "')"
   fmt.Println(query_string)
-	_, err := db.Exec(query_string)
-	if err != nil {
-		log.Fatal(err)
-	}
+  _, err := db.Exec(query_string)
+  if err != nil {
+    log.Fatal(err)
+  }
 }
 
 func delete_all_sql(db *sql.DB) {
-	_, err := db.Exec("delete from products")
-	if err != nil {
-		log.Fatal(err)
-	}
+  _, err := db.Exec("delete from products")
+  if err != nil {
+    log.Fatal(err)
+  }
 }
 
 func delete_sql(db *sql.DB, id string) {
-	_, err := db.Exec(fmt.Sprintf("delete from products where id = %s", id))
-	if err != nil {
-		log.Fatal(err)
-	}
+  _, err := db.Exec(fmt.Sprintf("delete from products where id = %s", id))
+  if err != nil {
+    log.Fatal(err)
+  }
 }
 
 func update_sql(db *sql.DB, id string, product_name string) {
-	_, err := db.Exec("update products set product_name = '" + product_name + "' where id = " + id )
-	if err != nil {
-		log.Fatal(err)
-	}
+  _, err := db.Exec("update products set product_name = '" + product_name + "' where id = " + id )
+  if err != nil {
+    log.Fatal(err)
+  }
 } */
