@@ -29,7 +29,7 @@ func main() {
 
   // get os args
   fmt.Println(len(os.Args))
-  if len(os.Args) != 2 {
+  if len(os.Args) < 2 {
     fmt.Println("Please input program argument (select/insert/delete/update).")
     fmt.Println("No argument found. exiting program.")
     log.Fatalf("Please input program argument (select/insert/delete/update).")
@@ -37,12 +37,18 @@ func main() {
     syscall.Exit(1)
   }
   command := os.Args[1]
-  fmt.Println(command)
-  db_filename := cfg.Filename
+  var id string
+  var product_name string
+  if len(os.Args) >= 3 {
+    id = os.Args[2]
+    fmt.Println("id = " + id)
+  }
+  if len(os.Args) == 4 {
+    product_name = os.Args[3]
+  }
+   db_filename := cfg.Filename
 
   // to access filename from config : cfg.Filename
-  // os.Remove("./" + db_filename)
-  // executeSql(db_filename)
   db := connect_db(db_filename)
   prep_sql(db)
   switch command {
@@ -50,11 +56,13 @@ func main() {
       rows := select_sql(db)
       fmt.Println(rows)
     case "insert":
-      insert_sql(db)
+      insert_sql(db, id, product_name)
+    case "delete_all":
+      delete_all_sql(db)
     case "delete":
-      delete_sql(db)
+      delete_sql(db, id)
     case "update":
-      update_sql(db)
+      update_sql(db, id, product_name)
   }
   close_db(db)
 }
@@ -102,35 +110,31 @@ func select_sql(db *sql.DB) *sql.Rows {
   return rows
 }
 
-func insert_sql(db *sql.DB) {
-  tx, err := db.Begin()
-  if err != nil {
-    log.Fatal(err)
-  }
-  stmt, err := tx.Prepare("insert into products(id, product_name) values(?, ?)")
-  if err != nil {
-    log.Fatal(err)
-  }
-  defer stmt.Close()
-
-  for i := 0; i < 100; i++ {
-    _, err := stmt.Exec(i, fmt.Sprintf("こんにちわ世界%03d", i))
-    if err != nil {
-      log.Fatal(err)
-    }
-  }
-  tx.Commit()
+func insert_sql(db *sql.DB, id string, product_name string) {
+  query_string := "insert into products (id, product_name) values ("+ id + ", '" + product_name + "')"
+  fmt.Println(query_string)
+	_, err := db.Exec(query_string)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
-func delete_sql(db *sql.DB) {
+func delete_all_sql(db *sql.DB) {
 	_, err := db.Exec("delete from products")
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func update_sql(db *sql.DB) {
-	_, err := db.Exec("update products set product_name = 'a'")
+func delete_sql(db *sql.DB, id string) {
+	_, err := db.Exec(fmt.Sprintf("delete from products where id = %s", id))
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func update_sql(db *sql.DB, id string, product_name string) {
+	_, err := db.Exec("update products set product_name = '" + product_name + "' where id = " + id )
 	if err != nil {
 		log.Fatal(err)
 	}
