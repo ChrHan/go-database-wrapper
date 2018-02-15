@@ -3,6 +3,7 @@ package dbutil
 import (
 	"database/sql"
   "fmt"
+  "strconv"
   "github.com/prometheus/log"
   _ "github.com/mattn/go-sqlite3"
 )
@@ -15,6 +16,15 @@ func New(filename string) *Dbutil {
   return &Dbutil {
     Filename: filename,
   }
+}
+
+func (d *Dbutil) Prepare() {
+  db, err := sql.Open("sqlite3", "./" + d.Filename)
+  rows, err := db.Query("select id, name from products")
+  if err != nil {
+    db.Exec("create table products (id int primary key, product_name varchar(20))")
+  }
+  fmt.Println(rows)
 }
 
 func (d *Dbutil) Select() *sql.Rows {
@@ -40,6 +50,20 @@ func (d *Dbutil) Select() *sql.Rows {
   return rows
 }
 
+func (d *Dbutil) SelectCount() int {
+  db, err := sql.Open("sqlite3", "./" + d.Filename)
+  if err != nil {
+    log.Fatal(err)
+  }
+  var result string
+  var intResult int
+  err = db.QueryRow("select count(1) from products").Scan(&result)
+  if err != nil {
+    log.Fatal(err)
+  }
+  intResult, err = strconv.Atoi(result)
+  return intResult
+}
 /*func main() {
   // -> config from env
   cfg := &config{}
