@@ -18,5 +18,5 @@ Install `Go`
 1. Clone this repo
 1. cd to `app/sqlite_wrapper`
 1. Run `go install`
-1. Run program using `sqlite-wrapper {select|insert|update|delete}`
+1. Run program using `sqlite-wrapper {select|insert id product_name|update id product_name|delete id|delete_all}`
 
