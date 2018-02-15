@@ -8,10 +8,22 @@
   version = "v1.0.4"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/corpix/uarand"
+  packages = ["."]
+  revision = "2b8494104d86337cdd41d0a49cbed8e4583c0ab4"
+
+[[projects]]
   name = "github.com/davecgh/go-spew"
   packages = ["spew"]
   revision = "346938d642f2ec3594ed81d874461961cd0faa76"
   version = "v1.1.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/icrowley/fake"
+  packages = ["."]
+  revision = "4178557ae428460c3780a381c824a1f3aceb6325"
 
 [[projects]]
   name = "github.com/mattn/go-sqlite3"
@@ -65,6 +77,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "d1ebf7f4f1a78fa6508e244dc97e0d183df268a179108d12e507a49eadac159c"
+  inputs-digest = "c66fbbba1c43d3b64a03f2cde41f4b4a54620be7dec844946966ddbde07521d2"
   solver-name = "gps-cdcl"
   solver-version = 1

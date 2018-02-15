@@ -47,6 +47,7 @@ func (d *Dbutil) Select() *sql.Rows {
 	if err != nil {
 		log.Fatal(err)
 	}
+  db.Close();
   return rows
 }
 
@@ -62,8 +63,22 @@ func (d *Dbutil) SelectCount() int {
     log.Fatal(err)
   }
   intResult, err = strconv.Atoi(result)
+  db.Close();
   return intResult
 }
+
+func (d *Dbutil) Insert(id string, product_name string) {
+  db, errOpen := sql.Open("sqlite3", "./" + d.Filename)
+  if errOpen != nil {
+		log.Fatal(errOpen)
+	}
+  query_string := "insert into products (id, product_name) values ("+ id + ", '" + product_name + "')"
+	_, err := db.Exec(query_string)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 /*func main() {
   // -> config from env
   cfg := &config{}
