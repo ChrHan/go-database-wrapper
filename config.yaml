@@ -1,0 +1,7 @@
+development:
+  database:
+    filename: 'database.db'
+
+test:
+  database:
+    filename: 'test-database.db'
