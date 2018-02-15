@@ -26,3 +26,6 @@ vendor/*/
 
 # Vim swap
 *.swp
+
+# sqlite3 db
+*.db

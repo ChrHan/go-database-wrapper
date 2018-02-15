@@ -38,45 +38,50 @@ func main() {
   }
   command := os.Args[1]
   fmt.Println(command)
+  db_filename := cfg.Filename
 
   // to access filename from config : cfg.Filename
-  os.Remove("./" + cfg.Filename)
+  // os.Remove("./" + db_filename)
+  // executeSql(db_filename)
+  db := connect_db(db_filename)
+  prep_sql(db)
+  switch command {
+    case "select":
+      rows := select_sql(db)
+      fmt.Println(rows)
+    case "insert":
+      insert_sql(db)
+    case "delete":
+      delete_sql(db)
+    case "update":
+      update_sql(db)
+  }
+  close_db(db)
+}
 
-  db, err := sql.Open("sqlite3", "./foo.db")
+func connect_db(db_filename string) *sql.DB {
+  db, err := sql.Open("sqlite3", "./" + db_filename)
 	if err != nil {
     log.Fatal(err)
   }
-  defer db.Close()
+  return db
+}
 
-  sqlStmt := `
-  create table foo (id integer not null primary key, name text);
-  delete from foo;
-  `
-  _, err = db.Exec(sqlStmt)
+func close_db(db *sql.DB) {
+  db.Close()
+  fmt.Println("db is now closed")
+}
+
+func prep_sql(db *sql.DB) {
+  rows, err := db.Query("select id, name from products")
   if err != nil {
-    log.Printf("%q: %s\n", err, sqlStmt)
-    return
+    db.Exec("create table products (id int primary key, product_name varchar(20))")
   }
+  fmt.Println(rows)
+}
 
-  tx, err := db.Begin()
-  if err != nil {
-    log.Fatal(err)
-  }
-  stmt, err := tx.Prepare("insert into foo(id, name) values(?, ?)")
-  if err != nil {
-    log.Fatal(err)
-  }
-  defer stmt.Close()
-
-  for i := 0; i < 100; i++ {
-    _, err = stmt.Exec(i, fmt.Sprintf("こんにちわ世界%03d", i))
-    if err != nil {
-      log.Fatal(err)
-    }
-  }
-  tx.Commit()
-
-  rows, err := db.Query("select id, name from foo")
+func select_sql(db *sql.DB) *sql.Rows {
+  rows, err := db.Query("select id, product_name from products")
   if err != nil {
     log.Fatal(err)
   }
@@ -94,44 +99,39 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+  return rows
+}
 
-	stmt, err = db.Prepare("select name from foo where id = ?")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer stmt.Close()
-	var name string
-	err = stmt.QueryRow("3").Scan(&name)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(name)
-
-	_, err = db.Exec("delete from foo")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	_, err = db.Exec("insert into foo(id, name) values(1, 'foo'), (2, 'bar'), (3, 'baz')")
-	if err != nil {
-		log.Fatal(err)
-	}
-	rows, err = db.Query("select id, name from foo")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
-	for rows.Next() {
-		var id int
-		var name string
-		err = rows.Scan(&id, &name)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println(id, name)
-	}
-	err = rows.Err()
-	if err != nil {
+func insert_sql(db *sql.DB) {
+  tx, err := db.Begin()
+  if err != nil {
     log.Fatal(err)
   }
+  stmt, err := tx.Prepare("insert into products(id, product_name) values(?, ?)")
+  if err != nil {
+    log.Fatal(err)
+  }
+  defer stmt.Close()
+
+  for i := 0; i < 100; i++ {
+    _, err := stmt.Exec(i, fmt.Sprintf("こんにちわ世界%03d", i))
+    if err != nil {
+      log.Fatal(err)
+    }
+  }
+  tx.Commit()
+}
+
+func delete_sql(db *sql.DB) {
+	_, err := db.Exec("delete from products")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func update_sql(db *sql.DB) {
+	_, err := db.Exec("update products set product_name = 'a'")
+	if err != nil {
+		log.Fatal(err)
+	}
 }
