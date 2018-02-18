@@ -2,12 +2,12 @@ package main
 
 import (
 	"os"
-	"database/sql"
   "fmt"
   "syscall"
   "github.com/prometheus/log"
   "github.com/vrischmann/envconfig"
   _ "github.com/mattn/go-sqlite3"
+  dbutil "github.com/ChrHan/golang-sqlite-wrapper/dbutil"
 )
 
 type config struct {
@@ -46,96 +46,22 @@ func main() {
   if len(os.Args) == 4 {
     product_name = os.Args[3]
   }
-   db_filename := cfg.Filename
+  db_filename := cfg.Filename
 
   // to access filename from config : cfg.Filename
-  db := connect_db(db_filename)
-  prep_sql(db)
+  db := dbutil.New(db_filename)
+  db.Prepare()
   switch command {
     case "select":
-      rows := select_sql(db)
+      rows := db.Select()
       fmt.Println(rows)
     case "insert":
-      insert_sql(db, id, product_name)
+      db.Insert(id, product_name)
     case "delete_all":
-      delete_all_sql(db)
+      db.DeleteAll()
     case "delete":
-      delete_sql(db, id)
+      db.Delete(id)
     case "update":
-      update_sql(db, id, product_name)
+      db.Update(id, product_name)
   }
-  close_db(db)
-}
-
-func connect_db(db_filename string) *sql.DB {
-  db, err := sql.Open("sqlite3", "./" + db_filename)
-	if err != nil {
-    log.Fatal(err)
-  }
-  return db
-}
-
-func close_db(db *sql.DB) {
-  db.Close()
-  fmt.Println("db is now closed")
-}
-
-func prep_sql(db *sql.DB) {
-  rows, err := db.Query("select id, name from products")
-  if err != nil {
-    db.Exec("create table products (id int primary key, product_name varchar(20))")
-  }
-  fmt.Println(rows)
-}
-
-func select_sql(db *sql.DB) *sql.Rows {
-  rows, err := db.Query("select id, product_name from products")
-  if err != nil {
-    log.Fatal(err)
-  }
-  defer rows.Close()
-  for rows.Next() {
-    var id int
-    var name string
-    err = rows.Scan(&id, &name)
-    if err != nil {
-      log.Fatal(err)
-    }
-    fmt.Println(id, name)
-  }
-  err = rows.Err()
-	if err != nil {
-		log.Fatal(err)
-	}
-  return rows
-}
-
-func insert_sql(db *sql.DB, id string, product_name string) {
-  query_string := "insert into products (id, product_name) values ("+ id + ", '" + product_name + "')"
-  fmt.Println(query_string)
-	_, err := db.Exec(query_string)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func delete_all_sql(db *sql.DB) {
-	_, err := db.Exec("delete from products")
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func delete_sql(db *sql.DB, id string) {
-	_, err := db.Exec(fmt.Sprintf("delete from products where id = %s", id))
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func update_sql(db *sql.DB, id string, product_name string) {
-	_, err := db.Exec("update products set product_name = '" + product_name + "' where id = " + id )
-	if err != nil {
-		log.Fatal(err)
-	}
 }
