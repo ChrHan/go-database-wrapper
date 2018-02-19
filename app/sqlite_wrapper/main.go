@@ -40,7 +40,6 @@ func main() {
   var product_name string
   if len(os.Args) >= 3 {
     id = os.Args[2]
-    fmt.Println("id = " + id)
   }
   if len(os.Args) == 4 {
     product_name = os.Args[3]
@@ -52,8 +51,7 @@ func main() {
   db.Prepare()
   switch command {
     case "select":
-      rows := db.Select()
-      fmt.Println(rows)
+      db.Select()
     case "insert":
       db.Insert(id, product_name)
     case "delete_all":
