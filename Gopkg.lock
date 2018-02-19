@@ -4,8 +4,8 @@
 [[projects]]
   branch = "master"
   name = "github.com/ChrHan/go-sqlite-utility"
-  packages = ["."]
-  revision = "a863c515e54e9925a5e2a5bc3813329f9b4dbdcc"
+  packages = ["dbutil"]
+  revision = "1f9fe11a3a48de8f12e4ed1017a42227b5c94035"
 
 [[projects]]
   name = "github.com/Sirupsen/logrus"
@@ -49,6 +49,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "3904397e1fd072d10fa87944981c77e2c9b5a441c72913f91a6156f416bec409"
+  inputs-digest = "c24ab769e4b9e790ed5e6bc258d3f4b4a8a8914e77b8f597d139600d50231e01"
   solver-name = "gps-cdcl"
   solver-version = 1

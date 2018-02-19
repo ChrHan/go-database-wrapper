@@ -7,7 +7,7 @@ import (
   "github.com/prometheus/log"
   "github.com/vrischmann/envconfig"
   _ "github.com/mattn/go-sqlite3"
-  dbutil "github.com/ChrHan/go-sqlite-utility"
+  dbutil "github.com/ChrHan/go-sqlite-utility/dbutil"
 )
 
 type config struct {
