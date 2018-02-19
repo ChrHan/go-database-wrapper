@@ -2,28 +2,16 @@
 
 
 [[projects]]
+  branch = "master"
+  name = "github.com/ChrHan/go-sqlite-utility"
+  packages = ["."]
+  revision = "a863c515e54e9925a5e2a5bc3813329f9b4dbdcc"
+
+[[projects]]
   name = "github.com/Sirupsen/logrus"
   packages = ["."]
   revision = "d682213848ed68c0a260ca37d6dd5ace8423f5ba"
   version = "v1.0.4"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/corpix/uarand"
-  packages = ["."]
-  revision = "2b8494104d86337cdd41d0a49cbed8e4583c0ab4"
-
-[[projects]]
-  name = "github.com/davecgh/go-spew"
-  packages = ["spew"]
-  revision = "346938d642f2ec3594ed81d874461961cd0faa76"
-  version = "v1.1.0"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/icrowley/fake"
-  packages = ["."]
-  revision = "4178557ae428460c3780a381c824a1f3aceb6325"
 
 [[projects]]
   name = "github.com/mattn/go-sqlite3"
@@ -32,26 +20,10 @@
   version = "v1.6.0"
 
 [[projects]]
-  name = "github.com/pmezard/go-difflib"
-  packages = ["difflib"]
-  revision = "792786c7400a136282c1664665ae0a8db921c6c2"
-  version = "v1.0.0"
-
-[[projects]]
   branch = "master"
   name = "github.com/prometheus/log"
   packages = ["."]
   revision = "9a3136781e1ff7bc42736ba4acb81339b1422551"
-
-[[projects]]
-  name = "github.com/stretchr/testify"
-  packages = [
-    "assert",
-    "require",
-    "suite"
-  ]
-  revision = "12b6f73e6084dad08a7c6e575284b177ecafbc71"
-  version = "v1.2.1"
 
 [[projects]]
   branch = "master"
@@ -77,6 +49,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "c66fbbba1c43d3b64a03f2cde41f4b4a54620be7dec844946966ddbde07521d2"
+  inputs-digest = "3904397e1fd072d10fa87944981c77e2c9b5a441c72913f91a6156f416bec409"
   solver-name = "gps-cdcl"
   solver-version = 1
