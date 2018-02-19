@@ -28,7 +28,6 @@ func main() {
   }
 
   // get os args
-  fmt.Println(len(os.Args))
   if len(os.Args) < 2 {
     fmt.Println("Please input program argument (select/insert/delete/update).")
     fmt.Println("No argument found. exiting program.")
