@@ -11,11 +11,13 @@ Currently programmed only for this table specification:
 
 # Prerequisite
 
-Install `Go`
+1. `Go` version 1.94 upwards
+1. `dep` tool installed
 
 # Usage
 
 1. Clone this repo
+1. Run `dep ensure`
 1. cd to `app/sqlite_wrapper`
 1. Run `go install`
 1. Run program using `sqlite-wrapper {select|insert id product_name|update id product_name|delete id|delete_all}`
