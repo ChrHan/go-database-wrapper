@@ -1,7 +1,7 @@
 package main
 
 import (
-	"os"
+  "os"
   "fmt"
   "syscall"
   "github.com/prometheus/log"
@@ -51,7 +51,20 @@ func main() {
   db.Prepare()
   switch command {
     case "select":
-      db.Select()
+      rows := db.Select()
+      for rows.Next() {
+				var id int
+				var name string
+				err := rows.Scan(&id, &name)
+				if err != nil {
+					log.Fatal(err)
+				}
+        fmt.Println(id, name)
+      }
+      err := rows.Err()
+      if err != nil {
+        log.Fatal(err)
+      }
     case "insert":
       db.Insert(id, product_name)
     case "delete_all":
